@@ -31,6 +31,10 @@ When updating the Go version:
 4. Run `go mod tidy` to clean up dependencies
 5. Verify build and core tests still pass
 
+## GitHub Actions Workflow Updates
+
+Always use the newsest stable versions of GitHub Actions in workflows. Check the marketplace or official repositories for the latest versions before updating.
+
 ## Code Quality
 
 - Maintain existing code style and patterns
