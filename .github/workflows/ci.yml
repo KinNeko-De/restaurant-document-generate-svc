@@ -34,8 +34,6 @@ jobs:
       - name: "Installed go version"
         run: go version
 
-      - uses: actions/checkout@v5
-
       - name: Compute semantic version
         id: semantic_version
         uses: KinNeko-De/compute-semantic-version-action@v1
