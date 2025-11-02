@@ -14,10 +14,18 @@ When updating OpenTelemetry dependencies (go.opentelemetry.io/otel/*), you must 
 semconv "go.opentelemetry.io/otel/semconv/v1.24.0"
 ```
 
-**Action Required:**
-- Update the version number in the semconv import to match the OpenTelemetry version being used
-- The semconv version should typically match or be compatible with the main otel version. Try the exact same version first, and if there are issues, check the OpenTelemetry release notes for the correct semconv version.
-- Example: If updating to otel v1.38.0, update semconv import to v1.38.0
+**Step-by-step process (minimize premium requests):**
+1. Update the import version in `metric.go` to match the new OpenTelemetry version
+2. Add the semconv as a direct dependency: `go get go.opentelemetry.io/otel/semconv/v1.X.0` (replace X with version)
+3. If step 2 fails (package doesn't exist), try one version lower until it succeeds
+4. Run `go mod tidy` once to clean up
+5. Verify with: `go test ./internal/app/operation/metric`
+
+**Version compatibility notes:**
+- The semconv version should match the main otel version when possible
+- If exact version doesn't exist, use the highest available version (typically N-1)
+- Example: For otel v1.38.0, try v1.38.0 first, then v1.37.0 if needed
+- The semconv package is managed separately and may lag behind main otel releases
 
 **Why this is needed:**
 The semantic conventions package version needs to stay in sync with the main OpenTelemetry packages to avoid schema URL conflicts and ensure compatibility.
