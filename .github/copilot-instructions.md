@@ -45,15 +45,20 @@ Always use the newest stable versions of GitHub Actions in workflows. When updat
 
 Step-by-step process for updating action versions (minimize premium/trial requests):
 1. Search the workflow files under `.github/workflows/` for `uses:` entries that reference third-party actions.
-2. For each action, visit the action's official repository or the Marketplace page to find the latest stable release tag. Prefer a pinned major version (for example `actions/checkout@v4`). Also bump the major version when a new major release is available. In most cases this is safe and we can roll it back if the pipeline breaks. A successful pipeline run is needed to complete a pull request. You can do network calls for that.
+2. For each action, visit the action's official repository or the Marketplace page to find the latest stable release tag. Prefer a pinned MAJOR tag (for example `actions/checkout@v4`). Avoid pinning to an exact patch (for example `@v4.0.0`) unless you need fully reproducible runs — major-only tags receive compatible non-breaking updates (minor/patch) and are easier to maintain. When a new major release is available, evaluate compatibility and bump the major tag if safe. A successful pipeline run is needed to complete a pull request. You can do network calls for that.
 3. Update the workflow to the new tag. Example replacements:
 	- `actions/checkout@v3` → `actions/checkout@v4`
 	- `actions/setup-go@v4` → `actions/setup-go@v5`
 	- `docker/build-push-action@v4` → `docker/build-push-action@v5`
 
 Best practices and safety notes:
-- Prefer pinned version tags (e.g., `@v4`) rather than floating tags like `@main` or `@master`.
+- Prefer pinned MAJOR tags (e.g., `@v4`) rather than floating tags like `@main` or `@master`.
+- Avoid pinning to an exact patch (e.g., `@v4.0.0`) unless you require byte-for-byte reproducibility of CI runs. If you do pin an exact patch, document the reason in the PR and include steps to test updates.
 - Read the action's changelog for breaking changes before updating.
+
+Recommended usage examples:
+- Use `actions/checkout@v5` to get stable, non-breaking bug/security fixes within v5.
+- Use `actions/checkout@v5.0.0` only if you need to lock the runner to that exact release (rare).
 
 Examples of common actions in this repo (verify these when updating):
 - `actions/checkout@v4`
