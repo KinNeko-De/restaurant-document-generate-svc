@@ -24,7 +24,7 @@ jobs:
       - name: Install go
         uses: actions/setup-go@v5
         with:
-          go-version: '^1.22.0'
+          go-version: '^1.25.0'
       - name: "Installed go version"
         run: go version
       - uses: actions/checkout@v4
