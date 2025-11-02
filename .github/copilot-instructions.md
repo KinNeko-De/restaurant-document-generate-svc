@@ -41,7 +41,31 @@ When updating the Go version:
 
 ## GitHub Actions Workflow Updates
 
-Always use the newsest stable versions of GitHub Actions in workflows. Check the marketplace or official repositories for the latest versions before updating.
+Always use the newest stable versions of GitHub Actions in workflows. When updating action versions, follow the step-by-step process below to avoid introducing CI breakage and to minimize unnecessary network requests or trial-and-error steps.
+
+Step-by-step process for updating action versions (minimize premium/trial requests):
+1. Search the workflow files under `.github/workflows/` for `uses:` entries that reference third-party actions.
+2. For each action, visit the action's official repository or the Marketplace page to find the latest stable release tag. Prefer a pinned major version (for example `actions/checkout@v4`) and only bump the minor/patch portion when a safe point release is available.
+3. Update the workflow to the new tag. Example replacements:
+	- `actions/checkout@v3` → `actions/checkout@v4`
+	- `actions/setup-go@v4` → `actions/setup-go@v5`
+	- `docker/build-push-action@v4` → `docker/build-push-action@v5`
+
+Best practices and safety notes:
+- Prefer pinned version tags (e.g., `@v4`) rather than floating tags like `@main` or `@master`.
+- Read the action's changelog for breaking changes before updating.
+- Update one action at a time per PR when possible so failures are easy to diagnose.
+- After a successful update, run `go test ./internal/app/document ./internal/app/server` and `go build` in CI to validate the repository.
+
+Examples of common actions in this repo (verify these when updating):
+- `actions/checkout@v4`
+- `actions/setup-go@v5`
+- `codecov/codecov-action@v4`
+- `docker/build-push-action@v5`
+- `actions/github-script@v7`
+
+Rollback guidance:
+- If an updated action breaks CI in a way that's not immediately fixable, revert the workflow commit
 
 ## Code Quality
 
