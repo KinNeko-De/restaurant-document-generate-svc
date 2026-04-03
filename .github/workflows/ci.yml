@@ -6,7 +6,7 @@ on:
 
 env:
   MAJOR: 0
-  MINOR: 9
+  MINOR: 10
   PATCH: 0
   GIN_MODE: release
   MAIN_PACKAGE: 'cmd/document-generate-svc/main.go'
@@ -22,14 +22,14 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Install go
         uses: actions/setup-go@v6
         with:
-          go-version: '^1.25.0'
+          go-version: '^1.26.0'
 
       - name: "Installed go version"
         run: go version
@@ -82,13 +82,13 @@ jobs:
           mv coverage.filtered.out coverage.out
 
       - name: "Code coverage"
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
 
       - name: "Build artifacts"
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./build/dockerfile
@@ -105,3 +105,6 @@ jobs:
               ref: "refs/tags/${{steps.prepare_tag.outputs.git_tag }}",
               sha: context.sha
             })
+      - name: Delete Oudated Git Tags
+        uses: KinNeko-De/cleanup-outdated-tag-action@v0
+        if: github.ref == 'refs/heads/main'
